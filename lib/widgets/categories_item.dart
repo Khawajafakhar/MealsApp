@@ -12,7 +12,7 @@ class CategoriesItem extends StatelessWidget {
   CategoriesItem(this.id, this.title, this.color);
 
   void selectCategory(BuildContext context) {
-    Navigator.of(context).pushNamed(CategoriesScreen.routeKey,
+    Navigator.of(context).pushNamed(CategoriesScreen.categoriesScreenRouteKey,
         arguments: {'id': id, 'title': title});
   }
 
