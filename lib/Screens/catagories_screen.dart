@@ -10,7 +10,6 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Recipe App'),backgroundColor: Theme.of(context).primaryColor,),
       body: Container(color: Theme.of(context).backgroundColor,
         child: GridView(padding: const EdgeInsets.all(10),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
