@@ -45,10 +45,10 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           drawerItems(context, Icons.restaurant, 'Meals', () {
-            Navigator.of(context).pushNamed('/');
+            Navigator.of(context).pushReplacementNamed('/');
           }),
           drawerItems(context, Icons.settings, 'Filters', () {
-            Navigator.of(context).pushNamed(FiltersScreen.routeKey);
+            Navigator.of(context).pushReplacementNamed(FiltersScreen.routeKey);
           }),
         ],
       ),
