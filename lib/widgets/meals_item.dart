@@ -11,6 +11,7 @@ class MealsItem extends StatelessWidget {
   final int? duration;
   final Complexity? complexity;
   final Affordability? affordability;
+  
   const MealsItem(
       {Key? key,
       @required this.id,
@@ -18,7 +19,8 @@ class MealsItem extends StatelessWidget {
       @required this.imageUrl,
       @required this.duration,
       @required this.complexity,
-      @required this.affordability})
+      @required this.affordability,
+      })
       : super(key: key);
 
   String get getComplexity {
@@ -59,14 +61,19 @@ class MealsItem extends StatelessWidget {
   }
 
   void detailsScreen(BuildContext context) {
-    Navigator.of(context)
-        .pushNamed(MealsDetailsScreen.MealsDetailsScreenRouteKey,arguments: {'id': id});
+    Navigator.of(context).pushNamed(
+        MealsDetailsScreen.MealsDetailsScreenRouteKey,
+        arguments: {'id': id})
+        .then(
+          (result){
+          if(result != null){
+  }});
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap:() =>  detailsScreen(context),
+      onTap: () => detailsScreen(context),
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: Card(

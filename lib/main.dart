@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/Screens/filters_screen.dart';
 import 'package:meals_app/Screens/meals_details_screeen.dart';
 import 'package:meals_app/Screens/tabs_screen.dart';
+import 'package:meals_app/catagories_dummy.dart';
+import 'package:meals_app/models/meals.dart';
 import './widgets/categories_item.dart';
 import './Screens/category_recipe_screen.dart';
 import './Screens/catagories_screen.dart';
@@ -10,8 +12,65 @@ void main(List<String> args) {
   return runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegan': false,
+    'vegeterian': false,
+  };
+
+  List<Meal> _availableMeals = DUMMY_MEALS;
+
+  List<Meal> _favMeals = [];
+
+  void _setFilters(Map<String, bool> _newFilters) {
+    setState(() {
+      _filters = _newFilters;
+
+      _availableMeals = DUMMY_MEALS.where((element) {
+        if (_filters['gluten']! && !element.isGlutenFree!) {
+          return false;
+        }
+        if (_filters['lactose']! && !element.isLactoseFree!) {
+          return false;
+        }
+        if (_filters['vegan']! && !element.isVegan!) {
+          return false;
+        }
+        if (_filters['vegeterian']! && !element.isVegetarian!) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
+
+  void _toggleFavorites(String mealid) {
+    final existingIndex =
+        _favMeals.indexWhere((element) => element.id == mealid);
+    if (existingIndex >= 0) {
+      setState(() {
+        _favMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favMeals
+            .add(DUMMY_MEALS.firstWhere((element) => element.id == mealid));
+      });
+    }
+  }
+
+  bool _isFavorite(String mealId) {
+    return _favMeals.any((element) => element.id == mealId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +92,17 @@ class MyApp extends StatelessWidget {
       //  home: CategoriesScreen(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const TabsScreen(),
+        '/': (context) => TabsScreen(_favMeals),
         CategoriesScreen.categoriesScreenRouteKey: (context) =>
-            CategoryRecipeScreen(),
+            CategoryRecipeScreen(_availableMeals),
         MealsDetailsScreen.MealsDetailsScreenRouteKey: (context) =>
-            MealsDetailsScreen(),
-            FiltersScreen.routeKey:(context) => const FiltersScreen()
+            MealsDetailsScreen(_toggleFavorites, _isFavorite),
+        FiltersScreen.routeKey: (context) =>
+            FiltersScreen(_setFilters, _filters)
       },
       onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (context)=> const CategoriesScreen() );
+        return MaterialPageRoute(
+            builder: (context) => const CategoriesScreen());
       },
     );
   }
